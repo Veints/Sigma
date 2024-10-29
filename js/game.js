@@ -3,8 +3,8 @@ const ctx = canvas.getContext('2d');
 canvas.width = 800;  // Set canvas width
 canvas.height = 600; // Set canvas height
 
-const player1 = new Player(canvas.width / 2 - 100, canvas.height - 120, 'blue', { jump: false });
-const player2 = new Player(canvas.width / 2 + 50, canvas.height - 120, 'green', { jump: false });
+const player1 = new Player((canvas.width / 2) - 100, canvas.height - 150, 'blue', { jump: false });
+const player2 = new Player((canvas.width / 2) + 70, canvas.height - 150, 'green', { jump: false });
 const bullets = [];
 
 let score1 = 0;
@@ -16,10 +16,10 @@ function drawPlatform() {
 }
 
 function resetGame() {
-    player1.x = canvas.width / 2 - 100; // Player 1 starts on the left
-    player1.y = canvas.height - 120;
-    player2.x = canvas.width / 2 + 50; // Player 2 starts on the right
-    player2.y = canvas.height - 120;
+    player1.x = (canvas.width / 2) - 100; // Player 1 starts on the left
+    player1.y = canvas.height - 150; // Position on top of platform
+    player2.x = (canvas.width / 2) + 70; // Player 2 starts on the right
+    player2.y = canvas.height - 150; // Position on top of platform
     bullets.length = 0; // Clear bullets
 }
 
