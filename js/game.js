@@ -4,8 +4,8 @@ canvas.width = 800;  // Set canvas width
 canvas.height = 600; // Set canvas height
 
 // Players start above the platform
-const player1 = new Player(350, canvas.height - 150, 'green', { jump: false });
-const player2 = new Player(450, canvas.height - 150, 'red', { jump: false });
+const player1 = new Player(350, canvas.height - 150, 'green');
+const player2 = new Player(450, canvas.height - 150, 'red');
 const bullets = [];
 
 let score1 = 0;
@@ -26,9 +26,9 @@ function drawBuildings() {
 }
 
 function resetGame() {
-    player1.x = 350; // Position for Player 1
+    player1.x = 350; // Reset position for Player 1
     player1.y = canvas.height - 150; // On the platform
-    player2.x = 450; // Position for Player 2
+    player2.x = 450; // Reset position for Player 2
     player2.y = canvas.height - 150; // On the platform
     bullets.length = 0; // Clear bullets
 }
@@ -74,10 +74,10 @@ document.addEventListener('keydown', (event) => {
     if (event.key === 'w') player1.controls.jump = true; // Player 1 jump
     if (event.key === 'ArrowUp') player2.controls.jump = true; // Player 2 jump
 
-    if (event.key === 'a') player1.leanDirection = -1; // Player 1 lean left
-    if (event.key === 'd') player1.leanDirection = 1; // Player 1 lean right
-    if (event.key === 'ArrowLeft') player2.leanDirection = -1; // Player 2 lean left
-    if (event.key === 'ArrowRight') player2.leanDirection = 1; // Player 2 lean right
+    if (event.key === 'a') player1.controls.leanDirection = -1; // Player 1 lean left
+    if (event.key === 'd') player1.controls.leanDirection = 1; // Player 1 lean right
+    if (event.key === 'ArrowLeft') player2.controls.leanDirection = -1; // Player 2 lean left
+    if (event.key === 'ArrowRight') player2.controls.leanDirection = 1; // Player 2 lean right
 
     // Shooting logic
     if (event.key === 's') {
@@ -92,8 +92,8 @@ document.addEventListener('keyup', (event) => {
     if (event.key === 'w') player1.controls.jump = false; // Stop jump
     if (event.key === 'ArrowUp') player2.controls.jump = false; // Stop jump
 
-    if (event.key === 'a' || event.key === 'd') player1.leanDirection = 0; // Stop lean
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') player2.leanDirection = 0; // Stop lean
+    if (event.key === 'a' || event.key === 'd') player1.controls.leanDirection = 0; // Stop lean
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') player2.controls.leanDirection = 0; // Stop lean
 });
 
 // Start the game
