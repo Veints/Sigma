@@ -12,3 +12,12 @@ canvas {
     display: block;
 }
 
+.platform {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 20px;
+    background-color: #8B4513; /* Brown platform */
+}
