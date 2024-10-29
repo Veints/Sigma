@@ -93,4 +93,6 @@ document.addEventListener('keyup', (event) => {
 });
 
 resetGame();
-update();
+update( console.log(`Player 1 Position: (${player1.x}, ${player1.y})`);
+console.log(`Player 2 Position: (${player2.x}, ${player2.y})`);
+);
