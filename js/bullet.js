@@ -18,3 +18,4 @@ class Bullet {
         ctx.fill();
     }
 }
+ 
