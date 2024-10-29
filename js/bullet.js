@@ -3,7 +3,7 @@ class Bullet {
         this.x = x;
         this.y = y;
         this.size = 5;
-        this.speed = 8 * direction;
+        this.speed = 8 * direction; // Speed of the bullet
         this.angle = angle;
     }
 
