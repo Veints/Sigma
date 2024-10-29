@@ -45,4 +45,3 @@ class Player {
         ctx.fillRect(this.x, this.y, this.width, this.height); // Draw the player
     }
 }
- 
