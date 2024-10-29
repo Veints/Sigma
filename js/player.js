@@ -8,10 +8,13 @@ class Player {
         this.velocityY = 0; // Vertical velocity
         this.gravity = 1; // Gravity
         this.jumpPower = -15; // Jump power
+        this.knockback = 0; // Knockback effect
         this.controls = {
             jump: false,
             leanDirection: 0,
-        }; // Initialize controls here
+            shoot: false,
+            shootDuration: 0
+        }; // Initialize controls
     }
 
     update() {
@@ -27,6 +30,10 @@ class Player {
         // Lean logic
         this.x += this.controls.leanDirection; // Adjust player position based on lean direction
 
+        // Apply knockback
+        this.x += this.knockback;
+        this.knockback *= 0.9; // Gradually reduce knockback
+
         // Prevent falling through the platform
         if (this.y > canvas.height - 140) { // Adjust based on platform position
             this.y = canvas.height - 140; // Reset position to platform height
@@ -37,7 +44,7 @@ class Player {
     draw(ctx) {
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
-        
+
         // Draw head and arms
         ctx.fillStyle = 'black'; // Color for head
         ctx.beginPath();
@@ -54,5 +61,9 @@ class Player {
             console.error("Controls are not defined for this player.");
             return;
         }
+    }
+
+    applyKnockback(direction) {
+        this.knockback = direction * 5; // Adjust the knockback strength
     }
 }
