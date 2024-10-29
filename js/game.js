@@ -38,8 +38,8 @@ function update() {
     drawBuildings(); // Draw skyscrapers
     drawPlatform(); // Draw the platform
 
-    player1.update();
-    player2.update();
+    player1.update([player1, player2]);
+    player2.update([player1, player2]);
     player1.draw(ctx);
     player2.draw(ctx);
     
@@ -86,14 +86,16 @@ document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowLeft') player2.controls.leanDirection = -1; // Player 2 lean left
     if (event.key === 'ArrowRight') player2.controls.leanDirection = 1; // Player 2 lean right
 
-    // Shooting logic with varying bullet angle based on hold time
+    // Shooting logic
     if (event.key === 's') {
-        player1.controls.shoot = true; // Start shooting
-        player1.controls.shootDuration = 0; // Reset shoot duration
+        // Shoot a bullet
+        const direction = player1.x < player2.x ? 1 : -1; // Shoot towards the other player
+        bullets.push(new Bullet(player1.x + player1.width / 2, player1.y, direction));
     }
     if (event.key === 'ArrowDown') {
-        player2.controls.shoot = true; // Start shooting
-        player2.controls.shootDuration = 0; // Reset shoot duration
+        // Shoot a bullet
+        const direction = player2.x < player1.x ? -1 : 1; // Shoot towards the other player
+        bullets.push(new Bullet(player2.x + player2.width / 2, player2.y, direction));
     }
 });
 
@@ -103,50 +105,7 @@ document.addEventListener('keyup', (event) => {
 
     if (event.key === 'a' || event.key === 'd') player1.controls.leanDirection = 0; // Stop lean
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') player2.controls.leanDirection = 0; // Stop lean
-
-    // Stop shooting
-    if (event.key === 's') {
-        player1.controls.shoot = false;
-        // Handle shooting based on duration
-        let direction = 0;
-        if (player1.controls.shootDuration < 10) {
-            direction = 0; // Straight
-        } else if (player1.controls.shootDuration < 20) {
-            direction = 1; // Upward
-        } else {
-            direction = -1; // Downward
-        }
-        bullets.push(new Bullet(player1.x + player1.width / 2, player1.y, direction));
-    }
-    if (event.key === 'ArrowDown') {
-        player2.controls.shoot = false;
-        // Handle shooting based on duration
-        let direction = 0;
-        if (player2.controls.shootDuration < 10) {
-            direction = 0; // Straight
-        } else if (player2.controls.shootDuration < 20) {
-            direction = 1; // Upward
-        } else {
-            direction = -1; // Downward
-        }
-        bullets.push(new Bullet(player2.x + player2.width / 2, player2.y, direction));
-    }
 });
-
-// Update shoot duration while shooting
-setInterval(() => {
-    if (player1.controls.shoot) {
-        player1.controls.shootDuration++;
-    } else {
-        player1.controls.shootDuration = 0; // Reset when not shooting
-    }
-
-    if (player2.controls.shoot) {
-        player2.controls.shootDuration++;
-    } else {
-        player2.controls.shootDuration = 0; // Reset when not shooting
-    }
-}, 100); // Adjust interval as needed
 
 // Start the game
 resetGame();
