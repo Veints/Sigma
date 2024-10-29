@@ -8,7 +8,7 @@ const player1 = new Player((canvas.width / 2) - 100, canvas.height - 150, 'green
 const player2 = new Player((canvas.width / 2) + 70, canvas.height - 150, 'red', { jump: false });
 const bullets = [];
 
-let score1 = 0;
+let score1 = 0; 
 let score2 = 0;
 
 function drawPlatform() {
