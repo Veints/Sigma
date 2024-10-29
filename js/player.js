@@ -1,4 +1,4 @@
-class Player {
+class Player { 
     constructor(x, y, color, controls) {
         this.x = x;
         this.y = y;
