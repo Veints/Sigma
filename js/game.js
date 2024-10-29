@@ -1,7 +1,7 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width = 800;  // Set canvas width
+canvas.height = 600; // Set canvas height
 
 const player1 = new Player(canvas.width / 2 - 50, canvas.height - 120, 'blue', { jump: false });
 const player2 = new Player(canvas.width / 2 + 20, canvas.height - 120, 'green', { jump: false });
@@ -20,7 +20,7 @@ function resetGame() {
     player1.y = canvas.height - 120;
     player2.x = canvas.width / 2 + 20;
     player2.y = canvas.height - 120;
-    bullets.length = 0;
+    bullets.length = 0; // Clear bullets
 }
 
 function update() {
@@ -46,7 +46,13 @@ function update() {
         resetGame();
     }
 
-    requestAnimationFrame(update);
+    // Display scores
+    ctx.fillStyle = 'black';
+    ctx.font = '30px Arial';
+    ctx.fillText(`Player 1: ${score1}`, 50, 50);
+    ctx.fillText(`Player 2: ${score2}`, canvas.width - 150, 50);
+
+    requestAnimationFrame(update); // Loop the update
 }
 
 document.addEventListener('keydown', (event) => {
