@@ -16,7 +16,7 @@ class Player {
             shootDuration: 0
         }; // Initialize controls
     }
-
+ 
     update() {
         // Apply gravity
         this.velocityY += this.gravity;
