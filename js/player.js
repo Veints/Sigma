@@ -5,23 +5,31 @@ class Player {
         this.width = 30;
         this.height = 50;
         this.color = color;
-        this.controls = controls;
         this.gravity = 0.5;
         this.jumpPower = -10;
         this.velocityY = 0;
         this.onPlatform = true;
-        this.leanDirection = 0;
-        this.leanAngle = 0;
+        this.leanDirection = 0; // -1 for left, 1 for right
     }
 
     update() {
-        if (this.onPlatform) {
+        // Apply gravity
+        if (!this.onPlatform) {
+            this.velocityY += this.gravity;
             this.y += this.velocityY;
-            if (this.y + this.height >= canvas.height - 100) {
-                this.y = canvas.height - 100 - this.height; 
-                this.velocityY = 0;
-            }
         }
+
+        // Ground collision
+        if (this.y + this.height >= canvas.height - 100) {
+            this.y = canvas.height - 100 - this.height;
+            this.velocityY = 0;
+            this.onPlatform = true;
+        }
+
+        // Move based on lean direction
+        this.x += this.leanDirection * 2; // Adjust speed as needed
+        this.x = Math.max(0, Math.min(this.x, canvas.width - this.width)); // Prevent going off-screen
+
         this.handleInput();
     }
 
@@ -34,10 +42,6 @@ class Player {
 
     draw(ctx) {
         ctx.fillStyle = this.color;
-        ctx.save();
-        ctx.translate(this.x + this.width / 2, this.y + this.height);
-        ctx.rotate(this.leanAngle);
-        ctx.fillRect(-this.width / 2, -this.height, this.width, this.height);
-        ctx.restore();
+        ctx.fillRect(this.x, this.y, this.width, this.height); // Draw the player
     }
 }
