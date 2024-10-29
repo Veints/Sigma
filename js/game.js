@@ -3,12 +3,12 @@ const ctx = canvas.getContext('2d');
 canvas.width = 800;  // Set canvas width
 canvas.height = 600; // Set canvas height
 
-// Set player starting positions on the platform
-const player1 = new Player((canvas.width / 2) - 100, canvas.height - 150, 'green', { jump: false });
-const player2 = new Player((canvas.width / 2) + 70, canvas.height - 150, 'red', { jump: false });
+// Set player starting positions above the platform
+const player1 = new Player(350, canvas.height - 200, 'green', { jump: false });
+const player2 = new Player(450, canvas.height - 200, 'red', { jump: false });
 const bullets = [];
 
-let score1 = 0; 
+let score1 = 0;
 let score2 = 0;
 
 function drawPlatform() {
@@ -16,16 +16,26 @@ function drawPlatform() {
     ctx.fillRect((canvas.width - canvas.width * 0.8) / 2, canvas.height - 100, canvas.width * 0.8, 20); // Draw platform
 }
 
+function drawBuildings() {
+    ctx.fillStyle = 'grey'; // Skyscraper color
+    ctx.fillRect(50, canvas.height - 200, 50, 200);
+    ctx.fillRect(150, canvas.height - 300, 70, 300);
+    ctx.fillRect(300, canvas.height - 250, 60, 250);
+    ctx.fillRect(500, canvas.height - 150, 80, 150);
+    ctx.fillRect(650, canvas.height - 350, 40, 350);
+}
+
 function resetGame() {
-    player1.x = (canvas.width / 2) - 100; // Player 1 starts on the left
+    player1.x = 350; // Player 1 starts a little to the left of center
     player1.y = canvas.height - 150; // Position on top of platform
-    player2.x = (canvas.width / 2) + 70; // Player 2 starts on the right
+    player2.x = 450; // Player 2 starts a little to the right of center
     player2.y = canvas.height - 150; // Position on top of platform
     bullets.length = 0; // Clear bullets
 }
 
 function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBuildings(); // Draw skyscrapers
     drawPlatform();
 
     player1.update();
