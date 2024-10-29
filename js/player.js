@@ -10,7 +10,7 @@ class Player {
         this.velocityY = 0;
         this.onPlatform = true;
         this.leanDirection = 0; // -1 for left, 1 for right
-    }
+    } 
 
     update() {
         // Apply gravity
