@@ -1,4 +1,4 @@
-class Bullet { 
+class Bullet {
     constructor(x, y, direction) {
         this.x = x;
         this.y = y;
@@ -11,9 +11,12 @@ class Bullet {
     }
 
     draw(ctx) {
-        ctx.fillStyle = 'red';
+        ctx.fillStyle = 'grey'; // Set bullet color to grey
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x + this.size, this.y - this.size / 2); // Create rounded tip
+        ctx.lineTo(this.x + this.size, this.y + this.size / 2);
+        ctx.closePath();
         ctx.fill();
     }
 }
