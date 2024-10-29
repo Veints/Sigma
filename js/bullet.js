@@ -1,4 +1,4 @@
-class Bullet {
+class Bullet { 
     constructor(x, y, direction) {
         this.x = x;
         this.y = y;
