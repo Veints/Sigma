@@ -10,7 +10,7 @@ class Player {
         this.velocityY = 0;
         this.onPlatform = true;
         this.leanDirection = 0; // -1 for left, 1 for right
-    } 
+    }
 
     update() {
         // Apply gravity
@@ -27,7 +27,7 @@ class Player {
         }
 
         // Move based on lean direction
-        this.x += this.leanDirection * 2; // Adjust speed as needed
+        this.x += this.leanDirection * 3; // Increased speed for animation
         this.x = Math.max(0, Math.min(this.x, canvas.width - this.width)); // Prevent going off-screen
 
         this.handleInput();
@@ -41,7 +41,19 @@ class Player {
     }
 
     draw(ctx) {
+        // Draw the player body
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.width, this.height); // Draw the player
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+
+        // Draw the head
+        ctx.fillStyle = 'black';
+        ctx.beginPath();
+        ctx.arc(this.x + this.width / 2, this.y - 10, 10, 0, Math.PI * 2); // Head
+        ctx.fill();
+
+        // Draw the arms
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x - 5, this.y + 10, 5, 20); // Left arm
+        ctx.fillRect(this.x + this.width, this.y + 10, 5, 20); // Right arm
     }
 }
