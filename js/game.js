@@ -93,6 +93,41 @@ document.addEventListener('keyup', (event) => {
 });
 
 resetGame();
-update( console.log(`Player 1 Position: (${player1.x}, ${player1.y})`);
-console.log(`Player 2 Position: (${player2.x}, ${player2.y})`);
-);
+update();
+function update() {
+    // Log player positions to the console
+    console.log(`Player 1 Position: (${player1.x}, ${player1.y})`);
+    console.log(`Player 2 Position: (${player2.x}, ${player2.y})`);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBuildings(); // Draw skyscrapers
+    drawPlatform(); // Draw the platform
+
+    player1.update();
+    player2.update();
+    player1.draw(ctx);
+    player2.draw(ctx);
+    
+    bullets.forEach(bullet => {
+        bullet.update();
+        bullet.draw(ctx);
+    });
+
+    // Check for player fall-off
+    if (player1.y > canvas.height) {
+        score2++;
+        resetGame();
+    } else if (player2.y > canvas.height) {
+        score1++;
+        resetGame();
+    }
+
+    // Display scores
+    ctx.fillStyle = 'black';
+    ctx.font = '30px Arial';
+    ctx.fillText(`Player 1: ${score1}`, 50, 50);
+    ctx.fillText(`Player 2: ${score2}`, canvas.width - 150, 50);
+
+    requestAnimationFrame(update); // Loop the update
+}
+
