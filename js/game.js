@@ -34,10 +34,6 @@ function resetGame() {
 }
 
 function update() {
-    // Log player positions to the console
-    console.log(`Player 1 Position: (${player1.x}, ${player1.y})`);
-    console.log(`Player 2 Position: (${player2.x}, ${player2.y})`);
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBuildings(); // Draw skyscrapers
     drawPlatform(); // Draw the platform
@@ -50,6 +46,17 @@ function update() {
     bullets.forEach(bullet => {
         bullet.update();
         bullet.draw(ctx);
+        
+        // Check for bullet collisions
+        if (bullet.x < player1.x + player1.width && bullet.x + bullet.radius > player1.x && 
+            bullet.y < player1.y + player1.height && bullet.y + bullet.radius > player1.y) {
+            player1.applyKnockback(1); // Knock player 1 back
+            bullets.splice(bullets.indexOf(bullet), 1); // Remove bullet on hit
+        } else if (bullet.x < player2.x + player2.width && bullet.x + bullet.radius > player2.x && 
+                   bullet.y < player2.y + player2.height && bullet.y + bullet.radius > player2.y) {
+            player2.applyKnockback(-1); // Knock player 2 back
+            bullets.splice(bullets.indexOf(bullet), 1); // Remove bullet on hit
+        }
     });
 
     // Check for player fall-off
@@ -79,12 +86,14 @@ document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowLeft') player2.controls.leanDirection = -1; // Player 2 lean left
     if (event.key === 'ArrowRight') player2.controls.leanDirection = 1; // Player 2 lean right
 
-    // Shooting logic
+    // Shooting logic with varying bullet angle based on hold time
     if (event.key === 's') {
-        bullets.push(new Bullet(player1.x + player1.width / 2, player1.y, 1));
+        player1.controls.shoot = true; // Start shooting
+        player1.controls.shootDuration = 0; // Reset shoot duration
     }
     if (event.key === 'ArrowDown') {
-        bullets.push(new Bullet(player2.x + player2.width / 2, player2.y, -1));
+        player2.controls.shoot = true; // Start shooting
+        player2.controls.shootDuration = 0; // Reset shoot duration
     }
 });
 
@@ -94,7 +103,50 @@ document.addEventListener('keyup', (event) => {
 
     if (event.key === 'a' || event.key === 'd') player1.controls.leanDirection = 0; // Stop lean
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') player2.controls.leanDirection = 0; // Stop lean
+
+    // Stop shooting
+    if (event.key === 's') {
+        player1.controls.shoot = false;
+        // Handle shooting based on duration
+        let direction = 0;
+        if (player1.controls.shootDuration < 10) {
+            direction = 0; // Straight
+        } else if (player1.controls.shootDuration < 20) {
+            direction = 1; // Upward
+        } else {
+            direction = -1; // Downward
+        }
+        bullets.push(new Bullet(player1.x + player1.width / 2, player1.y, direction));
+    }
+    if (event.key === 'ArrowDown') {
+        player2.controls.shoot = false;
+        // Handle shooting based on duration
+        let direction = 0;
+        if (player2.controls.shootDuration < 10) {
+            direction = 0; // Straight
+        } else if (player2.controls.shootDuration < 20) {
+            direction = 1; // Upward
+        } else {
+            direction = -1; // Downward
+        }
+        bullets.push(new Bullet(player2.x + player2.width / 2, player2.y, direction));
+    }
 });
+
+// Update shoot duration while shooting
+setInterval(() => {
+    if (player1.controls.shoot) {
+        player1.controls.shootDuration++;
+    } else {
+        player1.controls.shootDuration = 0; // Reset when not shooting
+    }
+
+    if (player2.controls.shoot) {
+        player2.controls.shootDuration++;
+    } else {
+        player2.controls.shootDuration = 0; // Reset when not shooting
+    }
+}, 100); // Adjust interval as needed
 
 // Start the game
 resetGame();
