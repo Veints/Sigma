@@ -3,8 +3,8 @@ const ctx = canvas.getContext('2d');
 canvas.width = 800;  // Set canvas width
 canvas.height = 600; // Set canvas height
 
-const player1 = new Player(canvas.width / 2 - 50, canvas.height - 120, 'blue', { jump: false });
-const player2 = new Player(canvas.width / 2 + 20, canvas.height - 120, 'green', { jump: false });
+const player1 = new Player(canvas.width / 2 - 100, canvas.height - 120, 'blue', { jump: false });
+const player2 = new Player(canvas.width / 2 + 50, canvas.height - 120, 'green', { jump: false });
 const bullets = [];
 
 let score1 = 0;
@@ -16,9 +16,9 @@ function drawPlatform() {
 }
 
 function resetGame() {
-    player1.x = canvas.width / 2 - 50;
+    player1.x = canvas.width / 2 - 100; // Player 1 starts on the left
     player1.y = canvas.height - 120;
-    player2.x = canvas.width / 2 + 20;
+    player2.x = canvas.width / 2 + 50; // Player 2 starts on the right
     player2.y = canvas.height - 120;
     bullets.length = 0; // Clear bullets
 }
@@ -56,8 +56,8 @@ function update() {
 }
 
 document.addEventListener('keydown', (event) => {
-    if (event.key === 'o') player1.controls.jump = true; // Player 1 jump
-    if (event.key === 'e') player2.controls.jump = true; // Player 2 jump
+    if (event.key === 'w') player1.controls.jump = true; // Player 1 jump
+    if (event.key === 'ArrowUp') player2.controls.jump = true; // Player 2 jump
 
     if (event.key === 'a') player1.leanDirection = -1; // Player 1 lean left
     if (event.key === 'd') player1.leanDirection = 1; // Player 1 lean right
@@ -65,17 +65,17 @@ document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowRight') player2.leanDirection = 1; // Player 2 lean right
 
     // Shooting logic
-    if (event.key === 'i') {
-        bullets.push(new Bullet(player1.x + player1.width / 2, player1.y, 1, 0)); // Player 1 shoots
+    if (event.key === 's') {
+        bullets.push(new Bullet(player1.x + player1.width / 2, player1.y + player1.height / 2, 1)); // Player 1 shoots
     }
-    if (event.key === 'w') {
-        bullets.push(new Bullet(player2.x + player2.width / 2, player2.y, -1, 0)); // Player 2 shoots
+    if (event.key === 'ArrowDown') {
+        bullets.push(new Bullet(player2.x + player2.width / 2, player2.y + player2.height / 2, -1)); // Player 2 shoots
     }
 });
 
 document.addEventListener('keyup', (event) => {
-    if (event.key === 'o') player1.controls.jump = false; // Stop jump
-    if (event.key === 'e') player2.controls.jump = false; // Stop jump
+    if (event.key === 'w') player1.controls.jump = false; // Stop jump
+    if (event.key === 'ArrowUp') player2.controls.jump = false; // Stop jump
 
     if (event.key === 'a' || event.key === 'd') player1.leanDirection = 0; // Stop leaning
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') player2.leanDirection = 0; // Stop leaning
