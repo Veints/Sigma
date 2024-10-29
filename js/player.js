@@ -12,12 +12,11 @@ class Player {
         this.controls = {
             jump: false,
             leanDirection: 0,
-            shoot: false,
-            shootDuration: 0
+            shoot: false
         }; // Initialize controls
     }
- 
-    update() {
+
+    update(players) {
         // Apply gravity
         this.velocityY += this.gravity;
         this.y += this.velocityY;
@@ -28,7 +27,7 @@ class Player {
         }
 
         // Lean logic
-        this.x += this.controls.leanDirection; // Adjust player position based on lean direction
+        this.x += this.controls.leanDirection;
 
         // Apply knockback
         this.x += this.knockback;
@@ -38,6 +37,23 @@ class Player {
         if (this.y > canvas.height - 140) { // Adjust based on platform position
             this.y = canvas.height - 140; // Reset position to platform height
             this.velocityY = 0; // Reset vertical velocity
+        }
+
+        // Check collision with other players
+        for (let player of players) {
+            if (player !== this) {
+                if (this.x < player.x + player.width &&
+                    this.x + this.width > player.x &&
+                    this.y < player.y + player.height &&
+                    this.y + this.height > player.y) {
+                    // Collision detected, prevent overlap
+                    if (this.controls.leanDirection < 0) {
+                        this.x = player.x + player.width; // Prevent left overlap
+                    } else if (this.controls.leanDirection > 0) {
+                        this.x = player.x - this.width; // Prevent right overlap
+                    }
+                }
+            }
         }
     }
 
@@ -53,14 +69,6 @@ class Player {
         ctx.fillStyle = 'black'; // Color for arms
         ctx.fillRect(this.x - 5, this.y + 5, 5, 15); // Left arm
         ctx.fillRect(this.x + this.width, this.y + 5, 5, 15); // Right arm
-    }
-
-    handleInput() {
-        // Ensure controls are defined
-        if (!this.controls) {
-            console.error("Controls are not defined for this player.");
-            return;
-        }
     }
 
     applyKnockback(direction) {
