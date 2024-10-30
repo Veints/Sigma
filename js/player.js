@@ -12,7 +12,8 @@ class Player {
         this.controls = {
             jump: false,
             leanDirection: 0,
-            shoot: false
+            shoot: false,
+            shootDuration: 0
         }; // Initialize controls
     }
 
@@ -21,9 +22,10 @@ class Player {
         this.velocityY += this.gravity;
         this.y += this.velocityY;
 
-        // Jump logic
-        if (this.controls.jump) {
-            this.velocityY = this.jumpPower;
+        // Prevent falling through the platform
+        if (this.y > canvas.height - 140) { // Adjust based on platform position
+            this.y = canvas.height - 140; // Reset position to platform height
+            this.velocityY = 0; // Reset vertical velocity
         }
 
         // Lean logic
@@ -32,12 +34,6 @@ class Player {
         // Apply knockback
         this.x += this.knockback;
         this.knockback *= 0.9; // Gradually reduce knockback
-
-        // Prevent falling through the platform
-        if (this.y > canvas.height - 140) { // Adjust based on platform position
-            this.y = canvas.height - 140; // Reset position to platform height
-            this.velocityY = 0; // Reset vertical velocity
-        }
 
         // Check collision with other players
         for (let player of players) {
