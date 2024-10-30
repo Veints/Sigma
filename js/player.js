@@ -5,10 +5,10 @@ class Player {
         this.color = color;
         this.width = 20;
         this.height = 40;
-        this.angle = 90; // Angle of lean in degrees
-        this.gravity = 1;
+        this.angle = 90; // Start perpendicular to the ground
+        this.gravity = 0.5; // Reduced gravity for smoother jumps
         this.velocityY = 0;
-        this.jumpPower = -10; // Base jump power
+        this.jumpPower = -15; // Increased jump power
         this.knockback = 0; // Knockback effect
         this.controls = controls;
     }
@@ -26,9 +26,9 @@ class Player {
 
         // Leaning mechanics
         if (this.controls.leanLeft) {
-            this.angle = Math.max(this.angle - 1, 20); // Limit angle to a minimum of 20 degrees
+            this.angle = Math.max(this.angle - 2, 20); // Lean faster to a minimum of 20 degrees
         } else if (this.controls.leanRight) {
-            this.angle = Math.min(this.angle + 1, 90); // Reset angle to 90 degrees
+            this.angle = Math.min(this.angle + 2, 90); // Reset angle to 90 degrees
         }
 
         // Jumping mechanics
@@ -37,7 +37,7 @@ class Player {
             let jumpVertical = Math.sin(this.angle * (Math.PI / 180)); // Vertical component
 
             this.velocityY = this.jumpPower * jumpVertical; // Adjust velocity based on jump angle
-            this.x += jumpDirection * 5; // Move slightly in the jump direction
+            this.x += jumpDirection * 10; // Move slightly in the jump direction
             this.controls.jump = false; // Reset jump
         }
 
