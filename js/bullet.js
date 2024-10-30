@@ -4,7 +4,7 @@ class Bullet {
         this.y = y;
         this.direction = direction;
         this.speed = 20; // Much faster bullet speed
-        this.radius = 5; // Bullet size
+        this.radius = 5; // Bullet size 
         this.angle = angle; // Angle of bullet trajectory
     }
 
