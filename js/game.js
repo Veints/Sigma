@@ -27,10 +27,8 @@ function drawBuildings() {
 function resetGame() {
     player1.x = 300; // Reset position for Player 1
     player1.y = canvas.height - 150; // On the platform
-    player1.angle = 90; // Reset angle
     player2.x = 500; // Reset position for Player 2
     player2.y = canvas.height - 150; // On the platform
-    player2.angle = 90; // Reset angle
     bullets.length = 0; // Clear bullets
 }
 
@@ -90,47 +88,41 @@ document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowLeft') player2.controls.leanLeft = true; // Player 2 lean left
     if (event.key === 'ArrowRight') player2.controls.leanRight = true; // Player 2 lean right
 
-    // Shooting logic
-    if (event.key === 's') {
-        shootTimer1 = performance.now();
-    }
-    if (event.key === 'ArrowDown') {
-        shootTimer2 = performance.now();
-    }
-});
-
-document.addEventListener('keyup', (event) => {
-    if (event.key === 'w') player1.controls.jump = false; // Player 1 stop jump
-    if (event.key === 'ArrowUp') player2.controls.jump = false; // Player 2 stop jump
-
-    if (event.key === 'a') player1.controls.leanLeft = false; // Player 1 stop lean left
-    if (event.key === 'd') player1.controls.leanRight = false; // Player 1 stop lean right
-    if (event.key === 'ArrowLeft') player2.controls.leanLeft = false; // Player 2 stop lean left
-    if (event.key === 'ArrowRight') player2.controls.leanRight = false; // Player 2 stop lean right
-
-    // Shooting logic
+    // Shooting logic for Player 1
     if (event.key === 's') {
         const shootDuration = performance.now() - shootTimer1;
         let angle = Math.PI / 2; // Default straight up
-
         if (shootDuration < 500) angle = 3 * Math.PI / 2; // Shoot down
         else if (shootDuration < 1500) angle = Math.PI / 4; // Shoot diagonally
         else if (shootDuration >= 1500) angle = 0; // Shoot backward
 
         bullets.push(new Bullet(player1.x + player1.width / 2, player1.y, 1, angle));
+        shootTimer1 = performance.now();
     }
+
+    // Shooting logic for Player 2
     if (event.key === 'ArrowDown') {
         const shootDuration = performance.now() - shootTimer2;
         let angle = Math.PI / 2; // Default straight up
-
         if (shootDuration < 500) angle = 3 * Math.PI / 2; // Shoot down
         else if (shootDuration < 1500) angle = Math.PI / 4; // Shoot diagonally
         else if (shootDuration >= 1500) angle = 0; // Shoot backward
 
         bullets.push(new Bullet(player2.x + player2.width / 2, player2.y, -1, angle));
+        shootTimer2 = performance.now();
     }
 });
 
+document.addEventListener('keyup', (event) => {
+    if (event.key === 'ArrowUp') player2.controls.jump = false; // Player 2 stop jump
+    if (event.key === 'w') player1.controls.jump = false; // Player 1 stop jump
+
+    if (event.key === 'a') player1.controls.leanLeft = false; // Player 1 stop lean left
+    if (event.key === 'd') player1.controls.leanRight = false; // Player 1 stop lean right
+    if (event.key === 'ArrowLeft') player2.controls.leanLeft = false; // Player 2 stop lean left
+    if (event.key === 'ArrowRight') player2.controls.leanRight = false; // Player 2 stop lean right
+});
+
 // Start the game loop
-resetGame(); 
+resetGame();
 update();
