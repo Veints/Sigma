@@ -21,3 +21,4 @@ class Bullet {
         context.fill();
     }
 }
+ 
