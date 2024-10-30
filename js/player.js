@@ -9,7 +9,7 @@ class Player {
         this.gravity = 0.5;
         this.velocityY = 0;
         this.isJumping = false;
-        this.jumpPower = -15;
+        this.jumpPower = -10;
         this.knockback = 0;
         this.controls = controls;
     }
@@ -35,11 +35,7 @@ class Player {
 
         // Jumping mechanics
         if (this.controls.jump && !this.isJumping && this.y >= canvas.height - 140) {
-            let jumpDirection = Math.cos(this.angle * (Math.PI / 180));
-            let jumpVertical = Math.sin(this.angle * (Math.PI / 180));
-
-            this.velocityY = this.jumpPower * jumpVertical; // Vertical component based on angle
-            this.x += jumpDirection * 10; // Horizontal component based on angle
+            this.velocityY = this.jumpPower; // Jump straight up
             this.isJumping = true; // Set jumping state
             this.controls.jump = false; // Reset jump
         }
@@ -48,7 +44,7 @@ class Player {
         this.x += this.knockback;
         this.knockback *= 0.9;
 
-        // Check for collision with other players
+        // Prevent overlap with other players
         for (let player of players) {
             if (player !== this) {
                 if (this.x < player.x + player.width &&
