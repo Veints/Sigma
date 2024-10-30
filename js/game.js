@@ -78,6 +78,9 @@ function update() {
     requestAnimationFrame(update); // Loop the update
 }
 
+let shootTimer1 = 0;
+let shootTimer2 = 0;
+
 document.addEventListener('keydown', (event) => {
     if (event.key === 'w') player1.controls.jump = true; // Player 1 jump
     if (event.key === 'ArrowUp') player2.controls.jump = true; // Player 2 jump
@@ -89,12 +92,10 @@ document.addEventListener('keydown', (event) => {
 
     // Shooting logic
     if (event.key === 's') {
-        const angle = (player1.angle * Math.PI) / 180; // Convert to radians
-        bullets.push(new Bullet(player1.x + player1.width / 2, player1.y, -1, angle)); // Shoot left
+        shootTimer1 = performance.now();
     }
     if (event.key === 'ArrowDown') {
-        const angle = (player2.angle * Math.PI) / 180; // Convert to radians
-        bullets.push(new Bullet(player2.x + player2.width / 2, player2.y, 1, angle)); // Shoot right
+        shootTimer2 = performance.now();
     }
 });
 
@@ -106,6 +107,28 @@ document.addEventListener('keyup', (event) => {
     if (event.key === 'd') player1.controls.leanRight = false; // Player 1 stop lean right
     if (event.key === 'ArrowLeft') player2.controls.leanLeft = false; // Player 2 stop lean left
     if (event.key === 'ArrowRight') player2.controls.leanRight = false; // Player 2 stop lean right
+
+    // Shooting logic
+    if (event.key === 's') {
+        const shootDuration = performance.now() - shootTimer1;
+        let angle = Math.PI / 2; // Default straight up
+
+        if (shootDuration < 500) angle = 3 * Math.PI / 2; // Shoot down
+        else if (shootDuration < 1500) angle = Math.PI / 4; // Shoot diagonally
+        else if (shootDuration >= 1500) angle = 0; // Shoot backward
+
+        bullets.push(new Bullet(player1.x + player1.width / 2, player1.y, 1, angle));
+    }
+    if (event.key === 'ArrowDown') {
+        const shootDuration = performance.now() - shootTimer2;
+        let angle = Math.PI / 2; // Default straight up
+
+        if (shootDuration < 500) angle = 3 * Math.PI / 2; // Shoot down
+        else if (shootDuration < 1500) angle = Math.PI / 4; // Shoot diagonally
+        else if (shootDuration >= 1500) angle = 0; // Shoot backward
+
+        bullets.push(new Bullet(player2.x + player2.width / 2, player2.y, -1, angle));
+    }
 });
 
 // Start the game loop
