@@ -12,7 +12,7 @@ class Player {
         this.knockback = 0;
         this.controls = controls;
     }
-
+ 
     update(players) {
         // Apply gravity
         this.velocityY += this.gravity;
