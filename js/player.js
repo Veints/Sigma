@@ -5,11 +5,11 @@ class Player {
         this.color = color;
         this.width = 20;
         this.height = 40;
-        this.angle = 90; // Start perpendicular to the ground
-        this.gravity = 0.5; // Reduced gravity for smoother jumps
+        this.angle = 90; // Start upright
+        this.gravity = 0.5;
         this.velocityY = 0;
-        this.jumpPower = -15; // Increased jump power
-        this.knockback = 0; // Knockback effect
+        this.jumpPower = -15;
+        this.knockback = 0;
         this.controls = controls;
     }
 
@@ -26,18 +26,18 @@ class Player {
 
         // Leaning mechanics
         if (this.controls.leanLeft) {
-            this.angle = Math.max(this.angle - 2, 20); // Lean faster to a minimum of 20 degrees
+            this.angle = Math.max(this.angle - 2, 20);
         } else if (this.controls.leanRight) {
-            this.angle = Math.min(this.angle + 2, 90); // Reset angle to 90 degrees
+            this.angle = Math.min(this.angle + 2, 90);
         }
 
         // Jumping mechanics
-        if (this.controls.jump) {
-            let jumpDirection = Math.cos(this.angle * (Math.PI / 180)); // Horizontal component
-            let jumpVertical = Math.sin(this.angle * (Math.PI / 180)); // Vertical component
+        if (this.controls.jump && this.y >= canvas.height - 140) { // Only jump if on ground
+            let jumpDirection = Math.cos(this.angle * (Math.PI / 180));
+            let jumpVertical = Math.sin(this.angle * (Math.PI / 180));
 
-            this.velocityY = this.jumpPower * jumpVertical; // Adjust velocity based on jump angle
-            this.x += jumpDirection * 10; // Move slightly in the jump direction
+            this.velocityY = this.jumpPower * jumpVertical; // Vertical component based on angle
+            this.x += jumpDirection * 10; // Horizontal component based on angle
             this.controls.jump = false; // Reset jump
         }
 
@@ -79,6 +79,6 @@ class Player {
     }
 
     applyKnockback(direction) {
-        this.knockback = direction * 5; // Adjust knockback strength
+        this.knockback = direction * 5;
     }
 }
