@@ -8,11 +8,12 @@ class Player {
         this.angle = 90; // Start upright
         this.gravity = 0.5;
         this.velocityY = 0;
+        this.isJumping = false;
         this.jumpPower = -15;
         this.knockback = 0;
         this.controls = controls;
     }
- 
+
     update(players) {
         // Apply gravity
         this.velocityY += this.gravity;
@@ -22,6 +23,7 @@ class Player {
         if (this.y > canvas.height - 140) {
             this.y = canvas.height - 140;
             this.velocityY = 0;
+            this.isJumping = false;
         }
 
         // Leaning mechanics
@@ -32,12 +34,13 @@ class Player {
         }
 
         // Jumping mechanics
-        if (this.controls.jump && this.y >= canvas.height - 140) { // Only jump if on ground
+        if (this.controls.jump && !this.isJumping && this.y >= canvas.height - 140) {
             let jumpDirection = Math.cos(this.angle * (Math.PI / 180));
             let jumpVertical = Math.sin(this.angle * (Math.PI / 180));
 
             this.velocityY = this.jumpPower * jumpVertical; // Vertical component based on angle
             this.x += jumpDirection * 10; // Horizontal component based on angle
+            this.isJumping = true; // Set jumping state
             this.controls.jump = false; // Reset jump
         }
 
