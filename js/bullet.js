@@ -2,7 +2,7 @@ class Bullet {
     constructor(x, y, direction, angle) {
         this.x = x;
         this.y = y;
-        this.direction = direction; // -1 for left, 1 for right
+        this.direction = direction;
         this.speed = 20; // Much faster bullet speed
         this.radius = 5; // Bullet size
         this.angle = angle; // Angle of bullet trajectory
