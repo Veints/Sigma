@@ -4,12 +4,13 @@ canvas.width = 800;  // Set canvas width
 canvas.height = 600; // Set canvas height
 
 // Players start above the platform
-const player1 = new Player(350, canvas.height - 150, 'green');
-const player2 = new Player(450, canvas.height - 150, 'red');
+const player1 = new Player(300, canvas.height - 150, 'green');
+const player2 = new Player(500, canvas.height - 150, 'red');
 const bullets = [];
 
 let score1 = 0;
 let score2 = 0;
+let bulletDirection = 0; // To store bullet direction for trajectory
 
 function drawPlatform() {
     ctx.fillStyle = '#8B4513'; // Brown color for the platform
@@ -26,9 +27,9 @@ function drawBuildings() {
 }
 
 function resetGame() {
-    player1.x = 350; // Reset position for Player 1
+    player1.x = 300; // Reset position for Player 1
     player1.y = canvas.height - 150; // On the platform
-    player2.x = 450; // Reset position for Player 2
+    player2.x = 500; // Reset position for Player 2
     player2.y = canvas.height - 150; // On the platform
     bullets.length = 0; // Clear bullets
 }
@@ -74,6 +75,26 @@ function update() {
     ctx.fillText(`Player 1: ${score1}`, 50, 50);
     ctx.fillText(`Player 2: ${score2}`, canvas.width - 150, 50);
 
+    // Draw trajectory if shooting
+    if (player1.controls.shoot) {
+        const trajectoryX = player1.x + player1.width / 2;
+        const trajectoryY = player1.y - 20;
+        ctx.strokeStyle = 'blue';
+        ctx.beginPath();
+        ctx.moveTo(trajectoryX, trajectoryY);
+        ctx.lineTo(trajectoryX + (bulletDirection * 50), trajectoryY - (5 * bulletDirection)); // Draw trajectory
+        ctx.stroke();
+    }
+    if (player2.controls.shoot) {
+        const trajectoryX = player2.x + player2.width / 2;
+        const trajectoryY = player2.y - 20;
+        ctx.strokeStyle = 'blue';
+        ctx.beginPath();
+        ctx.moveTo(trajectoryX, trajectoryY);
+        ctx.lineTo(trajectoryX + (-bulletDirection * 50), trajectoryY - (5 * bulletDirection)); // Draw trajectory
+        ctx.stroke();
+    }
+
     requestAnimationFrame(update); // Loop the update
 }
 
@@ -100,13 +121,12 @@ document.addEventListener('keydown', (event) => {
 });
 
 document.addEventListener('keyup', (event) => {
-    if (event.key === 'w') player1.controls.jump = false; // Stop jump
-    if (event.key === 'ArrowUp') player2.controls.jump = false; // Stop jump
+    if (event.key === 'w') player1.controls.jump = false; // Player 1 jump
+    if (event.key === 'ArrowUp') player2.controls.jump = false; // Player 2 jump
 
     if (event.key === 'a' || event.key === 'd') player1.controls.leanDirection = 0; // Stop lean
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') player2.controls.leanDirection = 0; // Stop lean
 });
 
-// Start the game
-resetGame();
+// Start the game loop
 update();
