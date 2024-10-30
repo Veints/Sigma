@@ -7,8 +7,8 @@ let lastShootTime1 = 0;
 let lastShootTime2 = 0;
 
 function resetGame() {
-    player1 = new Player(200, 500, { color: 'green', jump: false, lean: 0 });
-    player2 = new Player(600, 500, { color: 'red', jump: false, lean: 0 });
+    player1 = new Player(200, 500, { color: 'green' });
+    player2 = new Player(600, 500, { color: 'red' });
 }
 
 function update() {
