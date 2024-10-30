@@ -49,4 +49,3 @@ class Player {
         context.restore();
     }
 }
- 
