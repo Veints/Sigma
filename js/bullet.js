@@ -1,14 +1,17 @@
 class Bullet {
-    constructor(x, y, direction) {
+    constructor(x, y, direction, angle) {
         this.x = x;
         this.y = y;
         this.direction = direction; // -1 for left, 1 for right
-        this.speed = 10; // Bullet speed (increased)
+        this.speed = 15; // Increased bullet speed
         this.radius = 5; // Bullet size
+        this.angle = angle; // Angle of bullet trajectory
     }
 
     update() {
-        this.x += this.speed * this.direction; // Move bullet
+        // Update position based on speed and angle
+        this.x += this.speed * this.direction * Math.cos(this.angle);
+        this.y += this.speed * this.direction * Math.sin(this.angle);
     }
 
     draw(ctx) {
