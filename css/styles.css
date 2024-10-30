@@ -1,13 +1,10 @@
 body {
     margin: 0;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: #87CEEB; /* Light blue sky */
+    background: #87CEEB; /* Light blue for sky */
 }
 
 canvas {
-    display: block; 
+    background: #fff; /* White background for the game area */
+    display: block;
+    margin: 0 auto;
 }
