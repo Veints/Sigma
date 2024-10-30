@@ -1,16 +1,14 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-canvas.width = 800;  // Set canvas width
-canvas.height = 600; // Set canvas height
+canvas.width = 800;
+canvas.height = 600;
 
-// Players start above the platform
-const player1 = new Player(300, canvas.height - 150, 'green');
-const player2 = new Player(500, canvas.height - 150, 'red');
+const player1 = new Player(300, canvas.height - 150, 'green', { leanLeft: false, leanRight: false, jump: false });
+const player2 = new Player(500, canvas.height - 150, 'red', { leanLeft: false, leanRight: false, jump: false });
 const bullets = [];
 
 let score1 = 0;
 let score2 = 0;
-let bulletDirection = 0; // To store bullet direction for trajectory
 
 function drawPlatform() {
     ctx.fillStyle = '#8B4513'; // Brown color for the platform
@@ -29,8 +27,10 @@ function drawBuildings() {
 function resetGame() {
     player1.x = 300; // Reset position for Player 1
     player1.y = canvas.height - 150; // On the platform
+    player1.angle = 90; // Reset angle
     player2.x = 500; // Reset position for Player 2
     player2.y = canvas.height - 150; // On the platform
+    player2.angle = 90; // Reset angle
     bullets.length = 0; // Clear bullets
 }
 
@@ -43,19 +43,19 @@ function update() {
     player2.update([player1, player2]);
     player1.draw(ctx);
     player2.draw(ctx);
-    
+
     bullets.forEach(bullet => {
         bullet.update();
         bullet.draw(ctx);
-        
+
         // Check for bullet collisions
-        if (bullet.x < player1.x + player1.width && bullet.x + bullet.radius > player1.x && 
-            bullet.y < player1.y + player1.height && bullet.y + bullet.radius > player1.y) {
-            player1.applyKnockback(1); // Knock player 1 back
+        if (bullet.x < player1.x + player1.width && bullet.x > player1.x &&
+            bullet.y < player1.y + player1.height && bullet.y > player1.y) {
+            player1.applyKnockback(-1); // Player 1 takes knockback from Player 2's bullet
             bullets.splice(bullets.indexOf(bullet), 1); // Remove bullet on hit
-        } else if (bullet.x < player2.x + player2.width && bullet.x + bullet.radius > player2.x && 
-                   bullet.y < player2.y + player2.height && bullet.y + bullet.radius > player2.y) {
-            player2.applyKnockback(-1); // Knock player 2 back
+        } else if (bullet.x < player2.x + player2.width && bullet.x > player2.x &&
+                   bullet.y < player2.y + player2.height && bullet.y > player2.y) {
+            player2.applyKnockback(1); // Player 2 takes knockback from Player 1's bullet
             bullets.splice(bullets.indexOf(bullet), 1); // Remove bullet on hit
         }
     });
@@ -75,26 +75,6 @@ function update() {
     ctx.fillText(`Player 1: ${score1}`, 50, 50);
     ctx.fillText(`Player 2: ${score2}`, canvas.width - 150, 50);
 
-    // Draw trajectory if shooting
-    if (player1.controls.shoot) {
-        const trajectoryX = player1.x + player1.width / 2;
-        const trajectoryY = player1.y - 20;
-        ctx.strokeStyle = 'blue';
-        ctx.beginPath();
-        ctx.moveTo(trajectoryX, trajectoryY);
-        ctx.lineTo(trajectoryX + (bulletDirection * 50), trajectoryY - (5 * bulletDirection)); // Draw trajectory
-        ctx.stroke();
-    }
-    if (player2.controls.shoot) {
-        const trajectoryX = player2.x + player2.width / 2;
-        const trajectoryY = player2.y - 20;
-        ctx.strokeStyle = 'blue';
-        ctx.beginPath();
-        ctx.moveTo(trajectoryX, trajectoryY);
-        ctx.lineTo(trajectoryX + (-bulletDirection * 50), trajectoryY - (5 * bulletDirection)); // Draw trajectory
-        ctx.stroke();
-    }
-
     requestAnimationFrame(update); // Loop the update
 }
 
@@ -102,31 +82,32 @@ document.addEventListener('keydown', (event) => {
     if (event.key === 'w') player1.controls.jump = true; // Player 1 jump
     if (event.key === 'ArrowUp') player2.controls.jump = true; // Player 2 jump
 
-    if (event.key === 'a') player1.controls.leanDirection = -1; // Player 1 lean left
-    if (event.key === 'd') player1.controls.leanDirection = 1; // Player 1 lean right
-    if (event.key === 'ArrowLeft') player2.controls.leanDirection = -1; // Player 2 lean left
-    if (event.key === 'ArrowRight') player2.controls.leanDirection = 1; // Player 2 lean right
+    if (event.key === 'a') player1.controls.leanLeft = true; // Player 1 lean left
+    if (event.key === 'd') player1.controls.leanRight = true; // Player 1 lean right
+    if (event.key === 'ArrowLeft') player2.controls.leanLeft = true; // Player 2 lean left
+    if (event.key === 'ArrowRight') player2.controls.leanRight = true; // Player 2 lean right
 
     // Shooting logic
     if (event.key === 's') {
-        // Shoot a bullet
-        const direction = player1.x < player2.x ? 1 : -1; // Shoot towards the other player
-        bullets.push(new Bullet(player1.x + player1.width / 2, player1.y, direction));
+        const angle = (player1.angle * Math.PI) / 180; // Convert to radians
+        bullets.push(new Bullet(player1.x + player1.width / 2, player1.y, -1, angle)); // Shoot left
     }
     if (event.key === 'ArrowDown') {
-        // Shoot a bullet
-        const direction = player2.x < player1.x ? -1 : 1; // Shoot towards the other player
-        bullets.push(new Bullet(player2.x + player2.width / 2, player2.y, direction));
+        const angle = (player2.angle * Math.PI) / 180; // Convert to radians
+        bullets.push(new Bullet(player2.x + player2.width / 2, player2.y, 1, angle)); // Shoot right
     }
 });
 
 document.addEventListener('keyup', (event) => {
-    if (event.key === 'w') player1.controls.jump = false; // Player 1 jump
-    if (event.key === 'ArrowUp') player2.controls.jump = false; // Player 2 jump
+    if (event.key === 'w') player1.controls.jump = false; // Player 1 stop jump
+    if (event.key === 'ArrowUp') player2.controls.jump = false; // Player 2 stop jump
 
-    if (event.key === 'a' || event.key === 'd') player1.controls.leanDirection = 0; // Stop lean
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') player2.controls.leanDirection = 0; // Stop lean
+    if (event.key === 'a') player1.controls.leanLeft = false; // Player 1 stop lean left
+    if (event.key === 'd') player1.controls.leanRight = false; // Player 1 stop lean right
+    if (event.key === 'ArrowLeft') player2.controls.leanLeft = false; // Player 2 stop lean left
+    if (event.key === 'ArrowRight') player2.controls.leanRight = false; // Player 2 stop lean right
 });
 
 // Start the game loop
+resetGame();
 update();
